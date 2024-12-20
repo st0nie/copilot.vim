@@ -204,7 +204,7 @@ endfunction
 function! s:SuggestionTextWithAdjustments() abort
   let empty = ['', 0, 0, {}]
   try
-    if mode() !~# '^[iR]' || (s:HideDuringCompletion() && (pumvisible() || coc#pum#visible())) || !exists('b:_copilot.suggestions')
+    if mode() !~# '^[iR]' || (s:HideDuringCompletion() && (pumvisible() || exists('g:coc_enabled') && coc#pum#visible())) || !exists('b:_copilot.suggestions')
       return empty
     endif
     let choice = get(b:_copilot.suggestions, b:_copilot.choice, {})
@@ -512,7 +512,7 @@ function! copilot#Accept(...) abort
     return repeat("\<Left>\<Del>", s.outdentSize) . repeat("\<Del>", s.deleteSize) .
             \ recall . "copilot#TextQueuedForInsertion()\<CR>" . (a:0 > 1 ? '' : "\<End>")
   endif
-  let default = get(g:, 'copilot_tab_fallback', (pumvisible() || coc#pum#visible()) ? "\<C-N>" : "\t")
+  let default = get(g:, 'copilot_tab_fallback', (pumvisible() || exists('g:coc_enabled') && coc#pum#visible()) ? "\<C-N>" : "\t")
   if !a:0
     return default
   elseif type(a:1) == v:t_string
